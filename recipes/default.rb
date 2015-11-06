@@ -13,7 +13,7 @@ node['dotfiles']['accounts'].each do |account|
     enable_checkout false
     user account.user
     group account.group
-    action :checkout
+    action :sync
   end
 
   execute 'install dotfiles' do
