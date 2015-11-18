@@ -1,7 +1,7 @@
 include_recipe 'zsh'
 include_recipe 'vim'
 
-node['dotfiles']['accounts'].each do |account|
+node[:dotfiles][:accounts].each do |account|
   home_dir = "/home/#{account.user}"
   if account.user == 'root'
     home_dir = '/root'
@@ -16,7 +16,7 @@ node['dotfiles']['accounts'].each do |account|
     action :sync
   end
 
-  execute 'install dotfiles' do
+  execute "install dotfiles to `#{account.user}` home folder" do
     command './install'
     cwd "#{home_dir}/dotfiles"
     user account.user
@@ -24,7 +24,7 @@ node['dotfiles']['accounts'].each do |account|
     environment 'HOME' => home_dir
   end
 
-  execute 'set zsh as default shell' do
+  execute "set zsh as default shell for `#{account.user}`" do
     command "chsh -s $(which zsh) #{account.user}"
   end
 end
