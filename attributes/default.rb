@@ -1,6 +1,8 @@
-default[:dotfiles][:accounts] = [
+id = :dotfiles
+
+default[id][:accounts] = [
   { user: 'root', group: 'root' },
   { user: 'vagrant', group: 'vagrant' }
 ]
-default[:dotfiles][:repository] = 'https://github.com/aspyatkin/dotfiles'
-default[:dotfiles][:revision] = 'master'
+default[id][:repository] = 'https://github.com/aspyatkin/dotfiles'
+default[id][:revision] = 'master'

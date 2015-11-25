@@ -12,7 +12,7 @@ depends 'vim', '~> 2.0.0'
 
 suggests 'latest-git', '~> 1.1.1'
 
-source_url 'https://github.com/aspyatkin/dotfiles-cookbook' if respond_to?(:source_url)
+source_url 'https://github.com/aspyatkin/dotfiles-cookbook' if respond_to? :source_url
 
 supports 'ubuntu'
 supports 'centos'

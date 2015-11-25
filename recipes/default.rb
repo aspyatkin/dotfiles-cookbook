@@ -1,15 +1,16 @@
 include_recipe 'zsh'
 include_recipe 'vim'
+id = :dotfiles
 
-node[:dotfiles][:accounts].each do |account|
+node[id][:accounts].each do |account|
   home_dir = "/home/#{account.user}"
   if account.user == 'root'
     home_dir = '/root'
   end
 
   git "#{home_dir}/dotfiles" do
-    repository node['dotfiles']['repository']
-    revision node['dotfiles']['revision']
+    repository node[id][:repository]
+    revision node[id][:revision]
     enable_checkout false
     user account.user
     group account.group
