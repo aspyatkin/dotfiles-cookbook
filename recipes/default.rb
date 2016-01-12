@@ -1,31 +1,31 @@
 include_recipe 'zsh'
 include_recipe 'vim'
+
 id = :dotfiles
 
-node[id][:accounts].each do |account|
-  home_dir = "/home/#{account.user}"
-  if account.user == 'root'
-    home_dir = '/root'
-  end
-
-  git "#{home_dir}/dotfiles" do
+node[id][:users].each do |user_name|
+  git "Checkout dotfiles repository to #{user_name}'s home directory" do
+    Chef::Resource::Git.send(:include, Dotfiles::Helper)
+    destination ::File.join get_user_homedir(user_name), 'dotfiles'
     repository node[id][:repository]
     revision node[id][:revision]
     enable_checkout false
-    user account.user
-    group account.group
+    user user_name
+    group get_user_group(user_name)
     action :sync
   end
 
-  execute "install dotfiles to `#{account.user}` home folder" do
+  execute "Install dotfiles to #{user_name}'s home directory" do
+    Chef::Resource::Execute.send(:include, Dotfiles::Helper)
     command './install'
-    cwd "#{home_dir}/dotfiles"
-    user account.user
-    group account.group
-    environment 'HOME' => home_dir
+    cwd ::File.join get_user_homedir(user_name), 'dotfiles'
+    user user_name
+    group get_user_group(user_name)
+    environment 'HOME' => get_user_homedir(user_name)
   end
 
-  execute "set zsh as default shell for `#{account.user}`" do
-    command "chsh -s $(which zsh) #{account.user}"
+  execute "Set zsh as #{user_name}'s default shell program" do
+    command "chsh -s $(which zsh) #{user_name}"
+    not_if "test \"$(getent passwd #{user_name} | cut -d: -f7)\" = \"$(which zsh)\""
   end
 end
