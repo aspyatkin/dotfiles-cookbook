@@ -1,9 +1,8 @@
-id = :dotfiles
+id = 'dotfiles'
 
-default[id][:users] = [
-  'root',
-  'vagrant'
-]
+default[id]['users'] = %w(
+  root
+)
 
-default[id][:repository] = 'https://github.com/aspyatkin/dotfiles'
-default[id][:revision] = 'master'
+default[id]['repository'] = 'https://github.com/aspyatkin/dotfiles'
+default[id]['revision'] = 'master'
