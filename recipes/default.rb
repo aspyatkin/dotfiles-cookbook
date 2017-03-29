@@ -6,11 +6,12 @@ include_recipe 'vim'
 id = 'dotfiles'
 
 node[id]['users'].each do |user_name|
-  passwd_entry = Etc.getpwnam(user_name)
-  group_entry = Etc.getgrgid(passwd_entry.gid)
+  passwd_entry = ::Etc.getpwnam(user_name)
+  group_entry = ::Etc.getgrgid(passwd_entry.gid)
 
-  git "Checkout dotfiles repository to #{user_name}'s home directory" do
-    destination ::File.join passwd_entry.dir, 'dotfiles'
+  dotfiles_dir = ::File.join(passwd_entry.dir, 'dotfiles')
+
+  git dotfiles_dir do
     repository node[id]['repository']
     revision node[id]['revision']
     enable_checkout false
@@ -21,7 +22,7 @@ node[id]['users'].each do |user_name|
 
   execute "Install dotfiles to #{user_name}'s home directory" do
     command './install'
-    cwd ::File.join passwd_entry.dir, 'dotfiles'
+    cwd dotfiles_dir
     user user_name
     group group_entry.name
     environment 'HOME' => passwd_entry.dir
