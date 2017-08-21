@@ -5,6 +5,19 @@ include_recipe 'vim'
 
 id = 'dotfiles'
 
+if node[id]['users'].empty?
+  if node['current_user'] != ::ENV['SUDO_USER']
+    node.default[id]['users'] = [
+      node['current_user'],
+      ::ENV['SUDO_USER']
+    ]
+  else
+    node.default[id]['users'] = [
+      node['current_user']
+    ]
+  end
+end
+
 node[id]['users'].each do |user_name|
   passwd_entry = ::Etc.getpwnam(user_name)
   group_entry = ::Etc.getgrgid(passwd_entry.gid)
